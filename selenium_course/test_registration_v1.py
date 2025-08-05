@@ -1,38 +1,36 @@
 import time
 import unittest
-from selenium.common.exceptions import NoSuchElementException
-from web_init.web_driver import chrome_driver
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
 
-def test_registration_form(link):
-    browser = chrome_driver()
-    browser.get(link)
+class TestRegistration(unittest.TestCase):
+    def setUp(self):
+        service = Service(ChromeDriverManager().install())
+        self.browser = webdriver.Chrome(service=service)
 
-    browser.find_element("css selector", ".first_block .first_class input.first").send_keys("Ivan")
-    browser.find_element("css selector", ".first_block .second_class input.second").send_keys("Petrov")
-    browser.find_element("css selector", ".first_block .third_class input.third").send_keys("test@test.com")
-    browser.find_element("css selector", "button.btn").click()
-    time.sleep(1)
-    welcome_text = browser.find_element("tag name", "h1").text
-    return welcome_text
+    def tearDown(self):
+        self.browser.quit()
 
+    def fill_form(self, browser):
+        browser.find_element(By.CSS_SELECTOR, ".first_block .first_class input.first").send_keys("Ivan")
+        browser.find_element(By.CSS_SELECTOR, ".first_block .second_class input.second").send_keys("Petrov")
+        browser.find_element(By.CSS_SELECTOR, ".first_block .third_class input.third").send_keys("test@test.com")
+        browser.find_element(By.CSS_SELECTOR, "button.btn").click()
+        time.sleep(1)
+        return browser.find_element(By.TAG_NAME, "h1").text
 
-class TestForm(unittest.TestCase):
-    def test_link1(self):
-        link1 = 'http://suninjuly.github.io/registration1.html'
-        self.assertEqual(
-            "Congratulations! You have successfully registered!",
-            test_registration_form(link1),
-            'Check all requiered fields'
-        )
+    def test_registration1(self):
+        self.browser.get("http://suninjuly.github.io/registration1.html")
+        welcome_text = self.fill_form(self.browser)
+        self.assertEqual("Congratulations! You have successfully registered!", welcome_text)
 
-    def test_link2(self):
-        link2 = 'https://suninjuly.github.io/registration2.html'
-        self.assertEqual(
-            "Congratulations! You have successfully registered!",
-            test_registration_form(link2),
-            'Check all requiered fields'
-        )
+    def test_registration2(self):
+        self.browser.get("http://suninjuly.github.io/registration2.html")
+        welcome_text = self.fill_form(self.browser)
+        self.assertEqual('Congratulations! You have successfully registered!', welcome_text)
 
 
 if __name__ == "__main__":
