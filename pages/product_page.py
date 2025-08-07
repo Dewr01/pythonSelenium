@@ -5,10 +5,10 @@ from .locators import ProductPageLocators
 
 
 class ProductPage(BasePage):
-    def add_to_basket(self):
-        button = self.browser.find_element(*ProductPageLocators.ADD_TO_BASKET_BUTTON)
-        button.click()
-        self.solve_quiz_and_get_code()
+    def add_to_basket(self, solve_quiz=False):
+        self.browser.find_element(*ProductPageLocators.ADD_TO_BASKET_BUTTON).click()
+        if solve_quiz:
+            self.solve_quiz_and_get_code()
 
     def should_be_correct_product_name(self):
         product_name = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
