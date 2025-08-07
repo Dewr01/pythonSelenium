@@ -1,4 +1,5 @@
 from selenium.common import NoSuchElementException
+from selenium.webdriver.common.by import By
 
 
 class BasePage():
@@ -16,3 +17,6 @@ class BasePage():
         except NoSuchElementException:
             return False
         return True
+
+    def should_be_login_link(self):
+        assert self.is_element_present(By.CSS_SELECTOR, "#login_link"), "Login link is not presented"
