@@ -1,10 +1,14 @@
 import math
 from selenium.common.exceptions import NoAlertPresentException
 from .base_page import BasePage
-from .locators import ProductPageLocators
+from .locators import ProductPageLocators, MainPageLocators
 
 
 class ProductPage(BasePage):
+    def go_to_login_page(self):
+        login_link = self.browser.find_element(*MainPageLocators.LOGIN_LINK)
+        login_link.click()
+
     def add_to_basket(self, solve_quiz=False):
         self.browser.find_element(*ProductPageLocators.ADD_TO_BASKET_BUTTON).click()
         if solve_quiz:
